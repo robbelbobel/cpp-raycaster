@@ -84,7 +84,6 @@ void loadMap(level_t* level, const uint8_t* fileContent, const uint16_t mapDataA
 void loadTextures(level_t* level, const uint8_t* fileContent, const uint16_t textureDataAddress){
     // Load Texture Count
     level -> textureCount = fileContent[textureDataAddress];
-    printf("TextureCount: %x\n", level -> textureCount);
 
     /** TEXTURE LOADING **/
     level -> textures = (texture_t*) malloc((level -> textureCount + 1) * sizeof(texture_t));
@@ -115,11 +114,5 @@ void loadTextures(level_t* level, const uint8_t* fileContent, const uint16_t tex
 
         // Set Current Frame
         level -> textures[i].currentFrame = 0;
-
-        printf("currentFrame: %x\n", level -> textures[i].currentFrame);
-        printf("frameCount: %x\n", level -> textures[i].frameCount);
-        printf("size.x: %x\n", level -> textures[i].size.x);
-        printf("size.y: %x\n", level -> textures[i].size.y);
-        printf("textureAddressPtr: %x\n", textureAddressPtr);
     }
 }

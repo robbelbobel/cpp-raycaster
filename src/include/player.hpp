@@ -1,8 +1,6 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
-#include <stdint.h>
-
 #include "vector.hpp"
 #include "level.hpp"
 #include "angle.hpp"

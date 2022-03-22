@@ -1,7 +1,6 @@
 # TODO
 
 * Optimize Code For C++:
-  * Loader
   * Player
   * Ray
   * Render

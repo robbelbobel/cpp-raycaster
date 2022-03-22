@@ -14,7 +14,7 @@ int main(){
     // Load LVL File
     level_t* level = loadLVL("/Users/robbetiteca/Documents/LVL/test.lvl");
 
-    if(level == NULL){
+    if(level == nullptr){
         std::cerr << "ERROR: Unable to load LVL file!" << std::endl;
         return -1;
     }
@@ -61,7 +61,7 @@ uint8_t intialize(SDL_Window** window){
     // Create SDL Window
     *window = SDL_CreateWindow("Raycaster", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
 
-    if(window == NULL){
+    if(window == nullptr){
         std::cerr << "ERROR: Failed to create SDL window, error code: " << SDL_GetError() << ".\nQuitting...\n" << std::endl;
         return 0;
     }

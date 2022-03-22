@@ -1,19 +1,22 @@
 #include "include/loader.hpp"
 
 level_t* loadLVL(const char* path){
-    // Open LVL File
-    FILE* lvlFile = fopen(path, "r");   
+    std::ifstream lvlStream;
 
-    if(lvlFile == NULL) return NULL;
+    // Open File
+    lvlStream.open(path, std::fstream::in | std::fstream::binary);
+
+    if(!lvlStream.is_open()) return nullptr;
 
     /** FILE HEADER **/
-    uint8_t header[HEADER_SIZE];
-
-    fread(header, 1, HEADER_SIZE, lvlFile);
+    uint8_t* header = new uint8_t[HEADER_SIZE];
+    lvlStream.read(reinterpret_cast<char*>(header), HEADER_SIZE);
 
     if(!(header[0] == 'L' && header[1] == 'V' && header[2] == 'L')){
-        return NULL;
-        fclose(lvlFile);
+        delete[] header;
+        lvlStream.close();
+        
+        return nullptr;
     }
 
     /** META DATA **/
@@ -29,10 +32,18 @@ level_t* loadLVL(const char* path){
     uint16_t textureDataAddress = 0;
     for(uint8_t i = 0; i < 2; i++) textureDataAddress += header[TEXTURE_DATA_PTR + i * sizeof(uint8_t)] << (8 * i);
 
-    // Read Full File
-    rewind(lvlFile);
-    uint8_t* fileContent = (uint8_t*) malloc(sizeof(uint8_t) * fileSize);
-    fread(fileContent, sizeof(uint8_t), fileSize, lvlFile);
+    /** READ FULL FILE **/
+    delete[] header;
+
+    // Reset File Stream
+    lvlStream.clear();
+    lvlStream.seekg(0, std::ios::beg);
+
+    // Read File
+    uint8_t* fileContent = new uint8_t[fileSize];
+    lvlStream.read(reinterpret_cast<char*>(fileContent), fileSize);
+
+    lvlStream.close();
 
     /** LEVEL GENERATION **/
     level_t* level = (level_t*) malloc(sizeof(level_t));
@@ -43,8 +54,8 @@ level_t* loadLVL(const char* path){
     /** TEXTURE DATA **/
     loadTextures(level, fileContent, textureDataAddress);
 
-    fclose(lvlFile);
-    free(fileContent);
+    delete[] fileContent;
+
     return level;
 }
 

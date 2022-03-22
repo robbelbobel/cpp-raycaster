@@ -2,6 +2,7 @@
 #define LOADER_H
 
 #include <iostream>
+#include <fstream>
 
 #include "level.hpp"
 

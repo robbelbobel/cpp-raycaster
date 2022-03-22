@@ -15,7 +15,7 @@ level_t* loadLVL(const char* path){
     if(!(header[0] == 'L' && header[1] == 'V' && header[2] == 'L')){
         delete[] header;
         lvlStream.close();
-        
+
         return nullptr;
     }
 
@@ -55,7 +55,6 @@ level_t* loadLVL(const char* path){
     loadTextures(level, fileContent, textureDataAddress);
 
     delete[] fileContent;
-
     return level;
 }
 

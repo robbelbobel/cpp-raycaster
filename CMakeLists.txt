@@ -12,7 +12,8 @@ add_executable(${PROJECT_NAME}  src/main.cpp
                                 src/texture.cpp
                                 src/loader.cpp
                                 src/angle.cpp
-                                src/game.cpp)
+                                src/game.cpp
+                                src/collision.cpp)
 
 find_package(SDL2 REQUIRED)
 

@@ -4,6 +4,7 @@
 #include "vector.hpp"
 #include "level.hpp"
 #include "angle.hpp"
+#include "collision.hpp"
 
 enum move_e{
     DIR_LEFT,
@@ -25,7 +26,7 @@ public:
 
 private:
     /* PRIVATE VARIABLES */
-    vecf3d_t position;
+    hitbox_t hitbox;
     float moveSpeed;
     float lookSpeed;
     float angle;

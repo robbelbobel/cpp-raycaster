@@ -1,7 +1,20 @@
 #include "include/texture.hpp"
 
-void updateTextures(texture_t* textures, uint8_t textureCount){
-    for(uint8_t i = 0; i < textureCount; i++){
-        textures[i].currentFrame = textures[i].currentFrame < (textures[i].frameCount - 1) ? textures[i].currentFrame + 1 : 0;
-    }
+Texture::Texture(uint32_t** pixels, uint8_t frameCount, vecu2d_t size){
+    Texture::pixels = pixels;
+    Texture::frameCount = frameCount;
+    Texture::size = size;
+    Texture::currentFrame = 0;
+}
+
+uint32_t Texture::getPixel(const uint8_t x, const uint8_t y){
+    return Texture::pixels[Texture::currentFrame][y * Texture::size.x + x];
+}
+
+vecu2d_t Texture::getSize(){
+    return Texture::size;
+}
+
+void Texture::update(){
+    Texture::currentFrame = Texture::currentFrame >= (Texture::frameCount - 1) ? 0 : currentFrame + 1;
 }

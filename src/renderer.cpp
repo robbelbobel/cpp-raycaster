@@ -38,30 +38,30 @@ void Renderer::renderEnvironment(const level_t* level, Player* player){
         texPixelRect.h = WALLPIXELHEIGHT;
 
         // Default To Error Texture If Texture ID Is Out Of Range
-        const texture_t* wallTexture = ray.getEndPoint().textureID > level -> textureCount ? &level -> textures[0] : &level -> textures[ray.getEndPoint().textureID];
+        Texture* wallTexture = level -> textures[ray.getEndPoint().textureID];
 
         // Calulate Texture Column
         uint8_t texCol;
 
         switch(ray.getEndPoint().direction){
             case POINT_DIR_UP:
-                texCol = (ray.getEndPoint().position.x - floor(ray.getEndPoint().position.x)) * wallTexture -> size.x;
+                texCol = (ray.getEndPoint().position.x - floor(ray.getEndPoint().position.x)) * wallTexture -> getSize().x;
                 break;
 
             case POINT_DIR_DOWN:
-                texCol = (1 - (ray.getEndPoint().position.x - floor(ray.getEndPoint().position.x))) * wallTexture -> size.x;
+                texCol = (1 - (ray.getEndPoint().position.x - floor(ray.getEndPoint().position.x))) * wallTexture -> getSize().x;
                 break;
 
             case POINT_DIR_LEFT:
-                texCol = (1 - (ray.getEndPoint().position.y - floor(ray.getEndPoint().position.y))) * wallTexture -> size.x;
+                texCol = (1 - (ray.getEndPoint().position.y - floor(ray.getEndPoint().position.y))) * wallTexture -> getSize().x;
                 break;
 
             case POINT_DIR_RIGHT:
-                texCol = (ray.getEndPoint().position.y - floor(ray.getEndPoint().position.y)) * wallTexture -> size.x;
+                texCol = (ray.getEndPoint().position.y - floor(ray.getEndPoint().position.y)) * wallTexture -> getSize().x;
                 break;
         }
 
-        float pixelStep = (float) wallTexture -> size.y / (wallBottom - wallTop);
+        float pixelStep = (float) wallTexture -> getSize().y / (wallBottom - wallTop);
         
         for(int16_t j = wallTop; j < wallBottom; j += WALLPIXELHEIGHT){
             if(j < 0) continue; 
@@ -69,7 +69,7 @@ void Renderer::renderEnvironment(const level_t* level, Player* player){
 
             texPixelRect.y = j;
 
-            uint32_t color = wallTexture -> pixelData[wallTexture -> currentFrame][(uint8_t)(pixelStep * (j - wallTop)) * wallTexture -> size.x + texCol];
+            uint32_t color = wallTexture -> getPixel(texCol, pixelStep * (j - wallTop));
             
             SDL_FillRect(windowSurface, &texPixelRect, SDL_MapRGB(windowSurface -> format, color >> 16, (color >> 8) & 0xFF, color & 0xFF));
         }
@@ -86,13 +86,13 @@ void Renderer::renderEnvironment(const level_t* level, Player* player){
 
                 const uint16_t mapIndex = (uint16_t) y * level -> size.x + (uint16_t) x;
 
-                const texture_t* texture = mapIndex < level -> size.x * level -> size.x ? &level -> textures[level -> floorMap[mapIndex]] : &level -> textures[0];
+                // const Texture* texture = mapIndex < level -> size.x * level -> size.x ? &level -> textures[level -> floorMap[mapIndex]] : &level -> textures[0];
 
-                uint32_t color = texture -> pixelData[texture -> currentFrame][((uint16_t)(y * texture -> size.x) % texture -> size.x) * texture -> size.y + (uint16_t) (x * texture -> size.x) % texture -> size.x];
+                // uint32_t color = texture -> pixelData[texture -> currentFrame][((uint16_t)(y * texture -> size.x) % texture -> size.x) * texture -> size.y + (uint16_t) (x * texture -> size.x) % texture -> size.x];
                 
                 texPixelRect.y = j;
 
-                SDL_FillRect(windowSurface, &texPixelRect, SDL_MapRGB(windowSurface -> format, color >> 16, (color >> 8) & 0xFF, color & 0xFF));
+                // SDL_FillRect(windowSurface, &texPixelRect, SDL_MapRGB(windowSurface -> format, color >> 16, (color >> 8) & 0xFF, color & 0xFF));
             }
         }
     }

@@ -12,7 +12,7 @@ typedef struct level_s{
     uint8_t* floorMap;
     uint8_t* ceilMap;
 
-    texture_t* textures;
+    Texture* textures[256];
     uint8_t textureCount;
 } level_t;
 

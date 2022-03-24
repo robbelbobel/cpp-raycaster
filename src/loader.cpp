@@ -96,33 +96,36 @@ void loadTextures(level_t* level, const uint8_t* fileContent, const uint16_t tex
     level -> textureCount = fileContent[textureDataAddress];
 
     /** TEXTURE LOADING **/
-    level -> textures = (texture_t*) malloc((level -> textureCount + 1) * sizeof(texture_t));
     uint16_t textureAddressPtr = textureDataAddress + 1;
 
     for(uint8_t i = 1; i <= level -> textureCount; i++){
+        vecu2d_t size;
+        uint8_t frameCount;
+        uint32_t** pixels;
+
         //** HEADER **//
         // Load Dimensions
-        level -> textures[i].size.x = fileContent[textureAddressPtr++];
-        level -> textures[i].size.y = fileContent[textureAddressPtr++];
+        size.x = fileContent[textureAddressPtr++];
+        size.y = fileContent[textureAddressPtr++];
 
         // Load Frame Count
-        level -> textures[i].frameCount = fileContent[textureAddressPtr++];
+        frameCount = fileContent[textureAddressPtr++];
 
         // Load Pixel Data
-        level -> textures[i].pixelData = (uint32_t**) malloc(level -> textures[i].frameCount * sizeof(uint32_t*));
-        for(uint8_t j = 0; j < level -> textures[i].frameCount; j++){
-            level -> textures[i].pixelData[j] = (uint32_t*) malloc(level -> textures[i].size.x * level -> textures[i].size.y * sizeof(uint32_t));
+        pixels = (uint32_t**) malloc(frameCount * sizeof(uint32_t*));
+        for(uint8_t j = 0; j < frameCount; j++){
+            pixels[j] = (uint32_t*) malloc(size.x * size.y * sizeof(uint32_t));
 
             // Load Individual Pixels
-            for(uint16_t k = 0; k < level -> textures[i].size.x * level -> textures[i].size.y; k++){
+            for(uint16_t k = 0; k < size.x * size.y; k++){
                 uint8_t r = fileContent[textureAddressPtr++];
                 uint8_t g = fileContent[textureAddressPtr++];
                 uint8_t b = fileContent[textureAddressPtr++];
-                level -> textures[i].pixelData[j][k] = (uint32_t) (r << 16) + (uint32_t) (g << 8) + b;
+                pixels[j][k] = (uint32_t) (r << 16) + (uint32_t) (g << 8) + b;
             }
         }
 
-        // Set Current Frame
-        level -> textures[i].currentFrame = 0;
+        level -> textures[i] = new Texture(pixels, frameCount, size);
+
     }
 }

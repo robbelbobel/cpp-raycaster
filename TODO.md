@@ -1,12 +1,9 @@
 # TODO
 
-* Optimize Code For C++:
-  * Texture
-
 * Implemented Hardware Accelerated Rendering
 
 * Fix Graphical Errors
 
-* Fix Collisions
+* Fix Collisions (Optimize Movement)
 
 * Optimize Drawing Time

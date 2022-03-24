@@ -46,7 +46,7 @@ level_t* loadLVL(const char* path){
     lvlStream.close();
 
     /** LEVEL GENERATION **/
-    level_t* level = (level_t*) malloc(sizeof(level_t));
+    level_t* level = new level_t;
 
     /** MAP DATA **/
     loadMap(level, fileContent, mapDataAddress);
@@ -71,7 +71,7 @@ void loadMap(level_t* level, const uint8_t* fileContent, const uint16_t mapDataA
     uint16_t mapAddressPtr = mapDataAddress + 3;
 
     // Load Wall Map
-    level -> wallMap = (uint8_t*) malloc(mapSize * sizeof(uint8_t));
+    level -> wallMap = new uint8_t[mapSize];
     for(uint16_t i = 0; i < mapSize; i++){ 
         level -> wallMap[i] = fileContent[mapAddressPtr + i];
     }
@@ -79,14 +79,14 @@ void loadMap(level_t* level, const uint8_t* fileContent, const uint16_t mapDataA
     
     // Load Floor Map
     if(level -> type >> 1 & 0b1){
-        level -> floorMap = (uint8_t*) malloc(mapSize * sizeof(uint8_t));
+        level -> floorMap = new uint8_t[mapSize];
         for(uint16_t i = 0; i < mapSize; i++) level -> floorMap[i] = fileContent[mapAddressPtr + i];
         mapAddressPtr += mapSize;
     }
 
     // Load Ceiling Map
     if(level -> type & 0b1){
-        level -> ceilMap = (uint8_t*) malloc(mapSize * sizeof(uint8_t));
+        level -> ceilMap = new uint8_t[mapSize];
         for(uint16_t i = 0; i < mapSize; i++) level -> ceilMap[i] = fileContent[mapAddressPtr + i];
     }
 }
@@ -103,7 +103,7 @@ void loadTextures(level_t* level, const uint8_t* fileContent, const uint16_t tex
         uint8_t frameCount;
         uint32_t** pixels;
 
-        //** HEADER **//
+        /** HEADER **/
         // Load Dimensions
         size.x = fileContent[textureAddressPtr++];
         size.y = fileContent[textureAddressPtr++];
@@ -112,9 +112,9 @@ void loadTextures(level_t* level, const uint8_t* fileContent, const uint16_t tex
         frameCount = fileContent[textureAddressPtr++];
 
         // Load Pixel Data
-        pixels = (uint32_t**) malloc(frameCount * sizeof(uint32_t*));
+        pixels = new uint32_t*[frameCount];
         for(uint8_t j = 0; j < frameCount; j++){
-            pixels[j] = (uint32_t*) malloc(size.x * size.y * sizeof(uint32_t));
+            pixels[j] = new uint32_t[size.x * size.y];
 
             // Load Individual Pixels
             for(uint16_t k = 0; k < size.x * size.y; k++){

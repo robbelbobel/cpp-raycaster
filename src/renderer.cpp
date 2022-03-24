@@ -86,13 +86,13 @@ void Renderer::renderEnvironment(const level_t* level, Player* player){
 
                 const uint16_t mapIndex = (uint16_t) y * level -> size.x + (uint16_t) x;
 
-                // const Texture* texture = mapIndex < level -> size.x * level -> size.x ? &level -> textures[level -> floorMap[mapIndex]] : &level -> textures[0];
-
-                // uint32_t color = texture -> pixelData[texture -> currentFrame][((uint16_t)(y * texture -> size.x) % texture -> size.x) * texture -> size.y + (uint16_t) (x * texture -> size.x) % texture -> size.x];
+                Texture* floorTexture = level -> textures[level -> floorMap[mapIndex]];
                 
+                uint32_t color = floorTexture -> getPixel((uint16_t) (x * floorTexture -> getSize().x) % floorTexture -> getSize().x, ((uint16_t)(y * floorTexture -> getSize().x) % floorTexture -> getSize().x));
+
                 texPixelRect.y = j;
 
-                // SDL_FillRect(windowSurface, &texPixelRect, SDL_MapRGB(windowSurface -> format, color >> 16, (color >> 8) & 0xFF, color & 0xFF));
+                SDL_FillRect(windowSurface, &texPixelRect, SDL_MapRGB(windowSurface -> format, color >> 16, (color >> 8) & 0xFF, color & 0xFF));
             }
         }
     }
@@ -127,7 +127,7 @@ void Renderer::renderMap(const level_t* level, Player* player){
     player_r.x = (player -> getPosition().x * tile_r.h) - (player_r.w / 2);
     player_r.y = (player -> getPosition().y * tile_r.h) - (player_r.h / 2);
 
-    // // Draw Player
+    // Draw Player
     SDL_FillRect(windowSurface, &player_r, SDL_MapRGB(windowSurface -> format, 0xFF, 0xFF, 0xFF));
 }
 

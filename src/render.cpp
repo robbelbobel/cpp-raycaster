@@ -17,7 +17,7 @@ void renderEnvironment(SDL_Surface* windowSurface, const level_t* level, Player*
     for(uint16_t i = 0; i < RAYCOUNT; i++){
         float angle = startAngle + i * angleStep;
 
-        pointData_t pointData = ray.cast(level, angle);
+        ray.cast(level, angle);
         
         /** RENDER WALLS **/
         // Calculate Wall Position   
@@ -32,26 +32,26 @@ void renderEnvironment(SDL_Surface* windowSurface, const level_t* level, Player*
         texPixelRect.h = WALLPIXELHEIGHT;
 
         // Default To Error Texture If Texture ID Is Out Of Range
-        const texture_t* wallTexture = pointData.textureID > level -> textureCount ? &level -> textures[0] : &level -> textures[pointData.textureID];
+        const texture_t* wallTexture = ray.getEndPoint().textureID > level -> textureCount ? &level -> textures[0] : &level -> textures[ray.getEndPoint().textureID];
 
         // Calulate Texture Column
         uint8_t texCol;
 
-        switch(pointData.direction){
+        switch(ray.getEndPoint().direction){
             case POINT_DIR_UP:
-                texCol = (ray.getEndPoint().x - floor(ray.getEndPoint().x)) * wallTexture -> size.x;
+                texCol = (ray.getEndPoint().position.x - floor(ray.getEndPoint().position.x)) * wallTexture -> size.x;
                 break;
 
             case POINT_DIR_DOWN:
-                texCol = (1 - (ray.getEndPoint().x - floor(ray.getEndPoint().x))) * wallTexture -> size.x;
+                texCol = (1 - (ray.getEndPoint().position.x - floor(ray.getEndPoint().position.x))) * wallTexture -> size.x;
                 break;
 
             case POINT_DIR_LEFT:
-                texCol = (1 - (ray.getEndPoint().y - floor(ray.getEndPoint().y))) * wallTexture -> size.x;
+                texCol = (1 - (ray.getEndPoint().position.y - floor(ray.getEndPoint().position.y))) * wallTexture -> size.x;
                 break;
 
             case POINT_DIR_RIGHT:
-                texCol = (ray.getEndPoint().y - floor(ray.getEndPoint().y)) * wallTexture -> size.x;
+                texCol = (ray.getEndPoint().position.y - floor(ray.getEndPoint().position.y)) * wallTexture -> size.x;
                 break;
         }
 

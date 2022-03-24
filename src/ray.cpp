@@ -1,18 +1,21 @@
 #include "include/ray.hpp"
 
 Ray::Ray(vecf2d_t position){
-    Ray::position1 = position;
-    Ray::position2 = position;
+    Ray::startPoint.position    = position;
+    Ray::startPoint.direction   = 0;
+    Ray::startPoint.textureID   = 0;
+
+    Ray::endPoint = Ray::startPoint;
 }
 
 float Ray::getLength(){
-    return sqrt(pow((Ray::position2.x - Ray::position1.x), 2) + pow((Ray::position2.y - Ray::position1.y), 2));
+    return sqrt(pow((Ray::endPoint.position.x - Ray::startPoint.position.x), 2) + pow((Ray::endPoint.position.y - Ray::startPoint.position.y), 2));
 }
 
-pointData_t Ray::cast(const level_t* level, const float angle){
+void Ray::cast(const level_t* level, const float angle){
     // Initialize Ray Copies
-    Ray rayX(Ray::position1);
-    Ray rayY(Ray::position1);
+    Ray rayX(Ray::startPoint.position);
+    Ray rayY(Ray::startPoint.position);
 
     // Determine Ray Direction
     uint8_t dirX = roundf(angle::adjust(angle)) > 90 && roundf(angle::adjust(angle)) < 270 ? POINT_DIR_LEFT : POINT_DIR_RIGHT;
@@ -41,45 +44,42 @@ pointData_t Ray::cast(const level_t* level, const float angle){
         dof--;
     }
     
-    pointData_t pointData;
-    pointData.textureID = hit;
+    Ray::endPoint.textureID = hit;
 
     if(rayX.getLength() < rayY.getLength()){
-        Ray::position2 = rayX.getEndPoint();
-        pointData.direction = dirX;
+        Ray::endPoint.position = rayX.getEndPoint().position;
+        Ray::endPoint.direction = dirX;
     }
     else{
-        Ray::position2 = rayY.getEndPoint();
-        pointData.direction = dirY;
+        Ray::endPoint.position = rayY.getEndPoint().position;
+        Ray::endPoint.direction = dirY;
     }
-
-    return pointData;
 }
 
-vecf2d_t Ray::getEndPoint(){
-    return Ray::position2;
+point_t Ray::getEndPoint(){
+    return Ray::endPoint;
 }
 
 void Ray::extend(uint8_t dir, const float angle){
     switch(dir){
         case POINT_DIR_UP:
-            Ray::position2.y = ceilf(Ray::position2.y) - 1;
-            Ray::position2.x = Ray::position1.x + (Ray::position1.y - Ray::position2.y) / tanf(angle::toRad(angle));
+            Ray::endPoint.position.y = ceilf(Ray::endPoint.position.y) - 1;
+            Ray::endPoint.position.x = Ray::startPoint.position.x + (Ray::startPoint.position.y - Ray::endPoint.position.y) / tanf(angle::toRad(angle));
             break;
         
         case POINT_DIR_DOWN:
-            Ray::position2.y = floorf(Ray::position2.y) + 1;
-            Ray::position2.x = Ray::position1.x + (Ray::position1.y - Ray::position2.y) / tanf(angle::toRad(angle));
+            Ray::endPoint.position.y = floorf(Ray::endPoint.position.y) + 1;
+            Ray::endPoint.position.x = Ray::startPoint.position.x + (Ray::startPoint.position.y - Ray::endPoint.position.y) / tanf(angle::toRad(angle));
             break;
         
         case POINT_DIR_LEFT:
-            Ray::position2.x = ceilf(Ray::position2.x) - 1;
-            Ray::position2.y = Ray::position1.y + (Ray::position1.x - Ray::position2.x) * tanf(angle::toRad(angle));
+            Ray::endPoint.position.x = ceilf(Ray::endPoint.position.x) - 1;
+            Ray::endPoint.position.y = Ray::startPoint.position.y + (Ray::startPoint.position.x - Ray::endPoint.position.x) * tanf(angle::toRad(angle));
             break;
         
         case POINT_DIR_RIGHT:
-            Ray::position2.x = floorf(Ray::position2.x) + 1;
-            Ray::position2.y = Ray::position1.y + (Ray::position1.x - Ray::position2.x) * tanf(angle::toRad(angle));
+            Ray::endPoint.position.x = floorf(Ray::endPoint.position.x) + 1;
+            Ray::endPoint.position.y = Ray::startPoint.position.y + (Ray::startPoint.position.x - Ray::endPoint.position.x) * tanf(angle::toRad(angle));
             break;
         
         default:
@@ -92,19 +92,19 @@ uint8_t Ray::checkCollision(const level_t* level, const uint8_t dir){
     
     switch(dir){
         case POINT_DIR_UP:
-            index = (Ray::position2.y - 1) * level -> size.x + (uint16_t) Ray::position2.x;
+            index = (Ray::endPoint.position.y - 1) * level -> size.x + (uint16_t) Ray::endPoint.position.x;
             break;
 
         case POINT_DIR_DOWN:
-            index = Ray::position2.y * level -> size.x + (uint16_t) Ray::position2.x;
+            index = Ray::endPoint.position.y * level -> size.x + (uint16_t) Ray::endPoint.position.x;
             break;
 
         case POINT_DIR_LEFT:
-            index = (uint16_t) Ray::position2.y * level -> size.x + Ray::position2.x - 1;
+            index = (uint16_t) Ray::endPoint.position.y * level -> size.x + Ray::endPoint.position.x - 1;
             break;
 
         case POINT_DIR_RIGHT:
-            index = (uint16_t) Ray::position2.y * level -> size.x + Ray::position2.x;
+            index = (uint16_t) Ray::endPoint.position.y * level -> size.x + Ray::endPoint.position.x;
             break;
     }
 

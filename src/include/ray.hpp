@@ -4,20 +4,9 @@
 #include <math.h>
 
 #include "player.hpp"
+#include "point.hpp"
 
 #define DOF 32
-
-enum pointDir_e{
-    POINT_DIR_UP,
-    POINT_DIR_DOWN,
-    POINT_DIR_LEFT,
-    POINT_DIR_RIGHT
-};
-
-typedef struct pointData_s{
-    uint8_t textureID;
-    uint8_t direction;
-} pointData_t;
 
 class Ray{
 public:
@@ -25,8 +14,8 @@ public:
     Ray(vecf2d_t position);
 
     float getLength();
-    pointData_t cast(const level_t* level, const float angle);
-    vecf2d_t getEndPoint();
+    void cast(const level_t* level, const float angle);
+    point_t getEndPoint();
 
 private:
     /* PRIVATE FUNCTIONS */
@@ -34,8 +23,8 @@ private:
     uint8_t checkCollision(const level_t* level, const uint8_t dir);
 
     /* PRIVATE VARIABLES */
-    vecf2d_t position1;
-    vecf2d_t position2;
+    point_t startPoint;
+    point_t endPoint;
 };
 
 #endif

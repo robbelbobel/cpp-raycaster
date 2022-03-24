@@ -1,6 +1,12 @@
-#include "include/render.hpp"
+#include "include/renderer.hpp"
 
-void renderEnvironment(SDL_Surface* windowSurface, const level_t* level, Player* player){
+Renderer::Renderer(SDL_Window* window){
+    Renderer::window = window;
+}
+
+void Renderer::renderEnvironment(const level_t* level, Player* player){
+    SDL_Surface* windowSurface = SDL_GetWindowSurface(window);
+
     uint16_t planeDist = (WIDTH / 2) / tanf(angle::toRad(FOV / 2));
 
     float angleStep     = FOV / RAYCOUNT;
@@ -92,7 +98,9 @@ void renderEnvironment(SDL_Surface* windowSurface, const level_t* level, Player*
     }
 }
 
-void renderMap(SDL_Surface* windowSurface, const level_t* level, Player* player){
+void Renderer::renderMap(const level_t* level, Player* player){
+    SDL_Surface* windowSurface = SDL_GetWindowSurface(window);
+
     /* TILE RENDERING */
     // Calculate Tile Dimensions
     SDL_Rect tile_r;
@@ -123,11 +131,13 @@ void renderMap(SDL_Surface* windowSurface, const level_t* level, Player* player)
     SDL_FillRect(windowSurface, &player_r, SDL_MapRGB(windowSurface -> format, 0xFF, 0xFF, 0xFF));
 }
 
-void renderGame(SDL_Surface* windowSurface, const level_t* level, Player* player){
+void Renderer::renderGame(const level_t* level, Player* player){
+    SDL_Surface* windowSurface = SDL_GetWindowSurface(window);
+
     // Clear Screen
     SDL_FillRect(windowSurface, NULL, SDL_MapRGB(windowSurface -> format, 24, 24, 24));
 
     // Render Game Elements
-    renderEnvironment(windowSurface, level, player);
-    renderMap(windowSurface, level, player);
+    renderEnvironment(level, player);
+    renderMap(level, player);
 }

@@ -1,8 +1,9 @@
 # TODO
 
 * Optimize Code For C++:
-  * Render
   * Texture
+
+* Implemented Hardware Accelerated Rendering
 
 * Fix Graphical Errors
 

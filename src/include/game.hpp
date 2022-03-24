@@ -2,7 +2,7 @@
 #define GAME_HPP
 
 #include "player.hpp"
-#include "render.hpp"
+#include "renderer.hpp"
 
 class Game{
 public:
@@ -11,16 +11,16 @@ public:
     ~Game();
 
     bool tick(uint16_t deltaTime);
-    void draw();
+    void render();
 
 private:
     /* PRIVATE FUNCTIONS */
     bool handleInput(uint16_t deltaTime);
 
     /* PRIVATE VARIABLES */
-    SDL_Window* window;
     const level_t* level;
     Player* player;
+    Renderer* renderer;
 };
 
 #endif

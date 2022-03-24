@@ -8,7 +8,7 @@ set(CMAKE_BUILD_TYPE Debug)
 add_executable(${PROJECT_NAME}  src/main.cpp
                                 src/player.cpp
                                 src/ray.cpp
-                                src/render.cpp
+                                src/renderer.cpp
                                 src/texture.cpp
                                 src/loader.cpp
                                 src/angle.cpp

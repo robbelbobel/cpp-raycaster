@@ -3,8 +3,7 @@
 Game::Game(const level_t* level, SDL_Window* window){
     Game::level = level;
     Game::player = new Player();
-
-    Game::window = window;
+    Game::renderer = new Renderer(window);
 }
 
 Game::~Game(){
@@ -16,10 +15,8 @@ bool Game::tick(uint16_t deltaTime){
     return Game::handleInput(deltaTime);
 }
 
-void Game::draw(){
-    renderGame(SDL_GetWindowSurface(Game::window), Game::level, Game::player);
-
-    SDL_UpdateWindowSurface(window);
+void Game::render(){
+    Game::renderer -> renderGame(Game::level, Game::player);
 }
 
 bool Game::handleInput(uint16_t deltaTime){

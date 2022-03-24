@@ -35,7 +35,9 @@ int main(){
         running = game.tick(deltaTime);
 
         // Draw Game
-        game.draw();
+        game.render();
+
+        SDL_UpdateWindowSurface(window);
 
         // Update Time Variables
         deltaTime = SDL_GetTicks() - oldTime;
